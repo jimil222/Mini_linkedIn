@@ -1,88 +1,82 @@
-"use client"
-
-import { useState } from "react"
-import Navbar from "./components/Navbar"
-import Register from "./pages/Register"
-import Login from "./pages/Login"
-import Home from "./pages/Home"
-import Profile from "./pages/Profile"
-
-// Mock data
-const mockPosts = [
-  {
-    id: 1,
-    author: "John Doe",
-    content: "Just finished an amazing project! Excited to share the results with the team.",
-    timestamp: "2 hours ago",
-  },
-  {
-    id: 2,
-    author: "Sarah Wilson",
-    content: "Great networking event today. Met so many talented professionals in the tech industry.",
-    timestamp: "4 hours ago",
-  },
-  {
-    id: 3,
-    author: "Mike Johnson",
-    content: "Celebrating 5 years at my current company! Time flies when you love what you do.",
-    timestamp: "1 day ago",
-  },
-]
-
-const mockUser = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-  bio: "Software Developer passionate about creating innovative solutions. Love working with React and modern web technologies.",
-  posts: [
-    {
-      id: 1,
-      content: "Just finished an amazing project! Excited to share the results with the team.",
-      timestamp: "2 hours ago",
-    },
-  ],
-}
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState("home")
-  const [isLoggedIn, setIsLoggedIn] = useState(true) // Set to true for demo
-  const [posts, setPosts] = useState(mockPosts)
-  const [user, setUser] = useState(mockUser)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
 
-  const addPost = (content) => {
-    const newPost = {
-      id: posts.length + 1,
-      author: user.name,
-      content,
-      timestamp: "Just now",
-    }
-    setPosts([newPost, ...posts])
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
 
-  const renderPage = () => {
-    if (!isLoggedIn && currentPage !== "register") {
-      return <Login setCurrentPage={setCurrentPage} setIsLoggedIn={setIsLoggedIn} />
+    if (token && userData) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(userData));
     }
+    setLoading(false);
+  }, []);
 
-    switch (currentPage) {
-      case "register":
-        return <Register setCurrentPage={setCurrentPage} setIsLoggedIn={setIsLoggedIn} />
-      case "login":
-        return <Login setCurrentPage={setCurrentPage} setIsLoggedIn={setIsLoggedIn} />
-      case "profile":
-        return <Profile user={user} />
-      default:
-        return <Home posts={posts} addPost={addPost} />
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/api/posts");
+        setPosts(res.data);
+      } catch (error) {
+        console.error("Error fetching posts:", error.message);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  const addPost = async (content) => {
+    try {
+      const res = await axios.post("http://localhost:4000/api/posts", {
+        content,
+        author: user.id, 
+      });
+      setPosts((prev) => [res.data, ...prev]); 
+    } catch (error) {
+      console.error("Error adding post:", error.message);
     }
-  }
+  };
+
+  if (loading) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {isLoggedIn && (
-        <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} setIsLoggedIn={setIsLoggedIn} user={user} />
-      )}
-      <main className={isLoggedIn ? "pt-16" : ""}>{renderPage()}</main>
+    <div className="min-h-screen bg-gray-100">
+      <Toaster position="top-right" reverseOrder={false} />
+      <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} user={user} setUser={setUser} />
+
+      <main className="pt-16">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                posts={posts}
+                addPost={addPost}
+                user={user}
+                isLoggedIn={isLoggedIn}
+                setPosts={setPosts}
+              />
+            }
+          />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />} />
+          <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} setUser={setUser} />} />
+          <Route path="/profile" element={isLoggedIn ? <Profile user={user} /> : <Navigate to="/login" />} />
+        </Routes>
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

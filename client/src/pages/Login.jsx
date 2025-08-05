@@ -1,27 +1,37 @@
-"use client"
-
+import axios from "axios";
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-const Login = ({ setCurrentPage, setIsLoggedIn }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
+
+
+const Login = ({ setUser , setIsLoggedIn }) => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Mock login - in real app, you'd call an API
-    console.log("Login data:", formData)
-    setIsLoggedIn(true)
-    setCurrentPage("home")
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await axios.post("http://localhost:4000/api/auth/login", formData);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      setUser(res.data.user)
+      setIsLoggedIn(true);
+      toast.success("Login successful!");
+      navigate('/')
+    } catch (err) {
+      toast.error("Login failed. Please check your credentials.");
+      setError(err.response?.data?.msg || "Login failed");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -75,7 +85,7 @@ const Login = ({ setCurrentPage, setIsLoggedIn }) => {
             <p className="text-sm text-gray-600">
               New to ProConnect?{" "}
               <button
-                onClick={() => setCurrentPage("register")}
+                onClick={() => navigate('/register')}
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Join now
