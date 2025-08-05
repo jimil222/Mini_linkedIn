@@ -39,7 +39,7 @@ function App() {
 
   const addPost = async (content) => {
     try {
-      const res = await axios.post("http://localhost:4000/api/posts", {
+      const res = await axios.post("https://proconnect-backend-0sv8.onrender.com/api/posts", {
         content,
         author: user.id, 
       });
