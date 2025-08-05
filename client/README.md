@@ -1,12 +1,96 @@
-# React + Vite
+# ProConnect - MERN Stack Mini LinkedIn App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ProConnect is a mini LinkedIn-like community platform built using the MERN stack (MongoDB, Express, React, Node.js). It allows users to register, log in, create posts, and view a community feed.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User registration and login with JWT authentication
+- Protected routes using React Router
+- Post creation and listing
+- Like posts
+- View user profile
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend**: React, Vite, Tailwind CSS, Axios, React Router
+- **Backend**: Node.js, Express.js, MongoDB, Mongoose, JWT
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm
+- MongoDB
+
+### Installation
+
+#### 1. Clone the repository
+
+```
+git clone https://github.com/yourusername/proconnect.git
+cd proconnect
+```
+
+#### 2. Setup backend
+
+```
+cd backend
+npm install
+```
+Create a `.env` file in the `backend` folder with the following content:
+
+```
+PORT=4000
+MONGO_URI=mongodb://localhost:27017/proconnect
+JWT_SECRET=your_jwt_secret
+```
+
+Run the backend server:
+
+```
+npm run dev
+```
+
+#### 3. Setup frontend
+
+```
+cd ../frontend
+npm install
+npm run dev
+```
+
+## Folder Structure
+
+```
+proconnect/
+│
+├── backend/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   └── server.js
+│
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   ├── App.jsx
+│   └── main.jsx
+│
+└── README.md
+```
+
+## API Endpoints
+
+### Auth
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+### Posts
+- `GET /api/posts`
+- `POST /api/posts`
+- `PATCH /api/posts/:id/like`
+
+## License
+
+This project is licensed under the MIT License.
