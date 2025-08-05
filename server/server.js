@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const url = `url`;
+const url = `https://proconnect-backend-0sv8.onrender.com`;
 const interval = 5 * 60 * 1000; 
 
 function reloadWebsite() {
