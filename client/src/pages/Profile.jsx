@@ -8,7 +8,7 @@ const Profile = ({ user }) => {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/posts/user/${user.id}`);
+        const res = await axios.get(`https://proconnect-backend-0sv8.onrender.com/api/posts/user/${user.id}`);
         setPosts(res.data);
       } catch (err) {
         console.error("Failed to fetch user posts", err);

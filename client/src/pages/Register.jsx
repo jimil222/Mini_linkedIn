@@ -33,9 +33,9 @@ const Register = ({ setIsLoggedIn, setUser }) => {
     }
 
     try {
-      await axios.post("http://localhost:4000/api/auth/register", formData);
+      await axios.post("https://proconnect-backend-0sv8.onrender.com/api/auth/register", formData);
 
-      const loginRes = await axios.post("http://localhost:4000/api/auth/login", {
+      const loginRes = await axios.post("https://proconnect-backend-0sv8.onrender.com/api/auth/login", {
         email: formData.email,
         password: formData.password,
       });

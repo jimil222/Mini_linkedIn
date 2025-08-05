@@ -28,7 +28,7 @@ function App() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/posts");
+        const res = await axios.get("https://proconnect-backend-0sv8.onrender.com/api/posts");
         setPosts(res.data);
       } catch (error) {
         console.error("Error fetching posts:", error.message);

@@ -5,7 +5,7 @@ import PostCard from "../components/PostCard"
 function Home({ posts, addPost, user, setPosts }) {
   const handleLike = async (postId) => {
     try {
-      const res = await axios.patch(`http://localhost:4000/api/posts/${postId}/like`, {
+      const res = await axios.patch(`https://proconnect-backend-0sv8.onrender.com/api/posts/${postId}/like`, {
         user: user.email, 
       });
 
