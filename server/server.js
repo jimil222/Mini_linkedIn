@@ -27,7 +27,7 @@ setInterval(reloadWebsite, interval);
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://proconnect-frontend-xdg8.onrender.com"],
   credentials: true,
 }));
 
